@@ -1,0 +1,11 @@
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.csproj.AssemblyReference.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.Properties.Resources.resources
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.csproj.GenerateResource.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.csproj.CoreCompileInputs.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\bin\Debug\PassReveal_dotNet4.exe.config
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\bin\Debug\PassReveal_dotNet4.exe
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\bin\Debug\PassReveal_dotNet4.pdb
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.exe
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.pdb
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\AutologonDecryptor.FrmMain.resources
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\PassReveal_dotNet4.exe.licenses
