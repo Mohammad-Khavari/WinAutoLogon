@@ -1,247 +1,11 @@
-﻿//using System;
-//using System.Runtime.InteropServices;
-//using System.Security.Principal;
-//using System.Windows.Forms;
-//using Microsoft.Win32;
-
-//namespace AutologonDecryptor
-//{
-//  public partial class FrmMain : Form
-//  {
-//    // Windows API structures and imports (same as before)
-//    [StructLayout(LayoutKind.Sequential)]
-//    private struct LSA_OBJECT_ATTRIBUTES
-//    {
-//      public int Length;
-//      public IntPtr RootDirectory;
-//      public IntPtr ObjectName;
-//      public uint Attributes;
-//      public IntPtr SecurityDescriptor;
-//      public IntPtr SecurityQualityOfService;
-//    }
-
-//    [StructLayout(LayoutKind.Sequential)]
-//    private struct LSA_UNICODE_STRING
-//    {
-//      public ushort Length;
-//      public ushort MaximumLength;
-//      public IntPtr Buffer;
-//    }
-
-//    [DllImport("advapi32.dll", SetLastError = true)]
-//    private static extern uint LsaOpenPolicy(
-//        ref LSA_UNICODE_STRING systemName,
-//        ref LSA_OBJECT_ATTRIBUTES objectAttributes,
-//        uint desiredAccess,
-//        out IntPtr policyHandle);
-
-//    [DllImport("advapi32.dll", SetLastError = true)]
-//    private static extern uint LsaRetrievePrivateData(
-//        IntPtr policyHandle,
-//        ref LSA_UNICODE_STRING keyName,
-//        out IntPtr privateData);
-
-//    [DllImport("advapi32.dll", SetLastError = true)]
-//    private static extern uint LsaClose(IntPtr objectHandle);
-
-//    [DllImport("advapi32.dll", SetLastError = true)]
-//    private static extern uint LsaNtStatusToWinError(uint status);
-
-//    private const uint STATUS_SUCCESS = 0x00000000;
-//    private const uint POLICY_GET_PRIVATE_INFORMATION = 0x00000004;
-
-//    // Form controls
-//    private Label lblUsername;
-//    private Label lblDomain;
-//    private Label lblPassword;
-//    private Button btnDecrypt;
-
-//    public FrmMain()
-//    {
-//      InitializeComponents();
-//      //CheckAndDecrypt();
-//    }
-
-//    private void InitializeComponents()
-//    {
-//      this.Text = "Autologon Decryptor";
-//      this.Size = new System.Drawing.Size(400, 200);
-//      this.StartPosition = FormStartPosition.CenterScreen;
-
-//      // Username Label
-//      lblUsername = new Label
-//      {
-//        Text = "Username: ",
-//        Location = new System.Drawing.Point(20, 20),
-//        Size = new System.Drawing.Size(350, 20)
-//      };
-
-//      // Domain Label
-//      lblDomain = new Label
-//      {
-//        Text = "Domain: ",
-//        Location = new System.Drawing.Point(20, 50),
-//        Size = new System.Drawing.Size(350, 20)
-//      };
-
-//      // Password Label
-//      lblPassword = new Label
-//      {
-//        Text = "Password: ",
-//        Location = new System.Drawing.Point(20, 80),
-//        Size = new System.Drawing.Size(350, 20)
-//      };
-
-//      // Decrypt Button
-//      btnDecrypt = new Button
-//      {
-//        Text = "Decrypt",
-//        Location = new System.Drawing.Point(20, 120),
-//        Size = new System.Drawing.Size(100, 30)
-//      };
-//      btnDecrypt.Click += (s, e) => CheckAndDecrypt();
-
-//      // Add controls to form
-//      this.Controls.Add(lblUsername);
-//      this.Controls.Add(lblDomain);
-//      this.Controls.Add(lblPassword);
-//      this.Controls.Add(btnDecrypt);
-//    }
-
-//    private void CheckAndDecrypt()
-//    {
-//      try
-//      {
-//        // Check if running with admin privileges
-//        if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
-//        {
-//          MessageBox.Show("This program must be run with administrative privileges.",
-//              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//          return;
-//        }
-
-//        // Get username and domain from registry
-//        using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon"))
-//        {
-//          if (key == null)
-//          {
-//            MessageBox.Show("Autologon not configured.",
-//                "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-//            return;
-//          }
-
-//          // Debugging: List all values in the key
-//          //string[] valueNames = key.GetValueNames();
-//          //foreach (string valueName in valueNames)
-//          //{
-//          //  object value = key.GetValue(valueName);
-//          //  Console.WriteLine($"{valueName}: {value}");
-//          //}
-
-//          //string username = key.GetValue("DefaultUserName") as string ?? "Not set";
-//          //string domain = key.GetValue("DefaultDomainName") as string ?? "Not set";
-
-//          object keyExist = key.GetValue("DefaultUserName");
-
-//          if (keyExist == null)
-//          {
-//            MessageBox.Show("Key does not exist");
-//          }
-
-//          string test = key.GetValue("DefaultUserName") as string;
-//          string test2 = key.GetValue("DefaultDomainName") as string;
-
-//          string username = string.IsNullOrEmpty(Convert.ToString( key.GetValue("DefaultUserName")))
-//          ? "Not set"
-//          : Convert.ToString( key.GetValue("DefaultUserName"));
-
-//          string domain = string.IsNullOrEmpty( Convert.ToString(key.GetValue("DefaultDomainName")))
-//              ? "Not set"
-//              : Convert.ToString( key.GetValue("DefaultDomainName"));
-
-
-//          // Debugging: Show retrieved values
-//          //Console.WriteLine($"Retrieved Username: {username}");
-//          //Console.WriteLine($"Retrieved Domain: {domain}");
-
-//          lblUsername.Text = $"Username: {username}";
-//          lblDomain.Text = $"Domain: {domain}";
-
-//          // Decrypt and display the password
-//          string password = GetAutologonPassword();
-//          lblPassword.Text = $"Password: {(password != null ? password : "Not found or failed to decrypt")}";
-//        }
-//      }
-//      catch (Exception ex)
-//      {
-//        MessageBox.Show($"Error: {ex.Message}",
-//            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-//      }
-//    }
-
-//    private static string GetAutologonPassword()
-//    {
-//      IntPtr policyHandle = IntPtr.Zero;
-//      LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
-//      objectAttributes.Length = 0;
-//      objectAttributes.RootDirectory = IntPtr.Zero;
-//      objectAttributes.Attributes = 0;
-//      objectAttributes.SecurityDescriptor = IntPtr.Zero;
-//      objectAttributes.SecurityQualityOfService = IntPtr.Zero;
-
-//      LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
-//      uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION, out policyHandle);
-
-//      if (result != STATUS_SUCCESS)
-//      {
-//        throw new Exception($"LsaOpenPolicy failed: {LsaNtStatusToWinError(result)}");
-//      }
-
-//      try
-//      {
-//        string keyNameStr = "DefaultPassword";
-//        LSA_UNICODE_STRING keyName = CreateLsaUnicodeString(keyNameStr);
-//        IntPtr privateData = IntPtr.Zero;
-
-//        result = LsaRetrievePrivateData(policyHandle, ref keyName, out privateData);
-
-//        if (result != STATUS_SUCCESS)
-//        {
-//          return null;
-//        }
-
-//        if (privateData != IntPtr.Zero)
-//        {
-//          LSA_UNICODE_STRING secretData = (LSA_UNICODE_STRING)Marshal.PtrToStructure(privateData, typeof(LSA_UNICODE_STRING));
-//          return Marshal.PtrToStringUni(secretData.Buffer, secretData.Length / 2);
-//        }
-//      }
-//      finally
-//      {
-//        LsaClose(policyHandle);
-//      }
-
-//      return null;
-//    }
-
-//    private static LSA_UNICODE_STRING CreateLsaUnicodeString(string value)
-//    {
-//      LSA_UNICODE_STRING unicodeString = new LSA_UNICODE_STRING();
-//      unicodeString.Buffer = Marshal.StringToHGlobalUni(value);
-//      unicodeString.Length = (ushort)(value.Length * 2);
-//      unicodeString.MaximumLength = (ushort)(unicodeString.Length + 2);
-//      return unicodeString;
-//    }
-//  }
-//}
-
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace AutologonDecryptor
+
+namespace Auto_Logon
 {
   public partial class FrmMain : Form
   {
@@ -301,7 +65,12 @@ namespace AutologonDecryptor
       //CheckAndDecrypt();
       btnDecrypt.Click += (s,e)=>CheckAndDecrypt();
       btnSetAutoLogon.Click += (s, e) => SetAutoLogon();
+      
+    }
 
+    private void BtnDeactive_Click(object sender, EventArgs e)
+    {
+      throw new NotImplementedException();
     }
 
     private void BtnSetAutoLogon_Click(object sender, EventArgs e)
@@ -572,6 +341,11 @@ namespace AutologonDecryptor
     private void BtnShowPW_Click(object sender, EventArgs e)
     {
       txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
+    }
+
+    private void btnDeactive_Click_1(object sender, EventArgs e)
+    {
+      DeactivateAutoLogon.Deactivate();
     }
   }
 }

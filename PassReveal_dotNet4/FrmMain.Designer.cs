@@ -1,4 +1,4 @@
-﻿namespace AutologonDecryptor
+﻿namespace Auto_Logon
 {
   partial class FrmMain
   {
@@ -85,7 +85,7 @@
       // 
       // pictureBox1
       // 
-      this.pictureBox1.Image = global::PassReveal_dotNet4.Properties.Resources._lock;
+      this.pictureBox1.Image = global::Auto_Logon.Properties.Resources._lock;
       this.pictureBox1.Location = new System.Drawing.Point(272, 3);
       this.pictureBox1.Name = "pictureBox1";
       this.pictureBox1.Size = new System.Drawing.Size(109, 115);
@@ -161,7 +161,7 @@
       this.btnDeactive.TabIndex = 18;
       this.btnDeactive.Text = "Deactivate";
       this.btnDeactive.UseVisualStyleBackColor = true;
-      this.btnDeactive.Visible = false;
+      this.btnDeactive.Click += new System.EventHandler(this.btnDeactive_Click_1);
       // 
       // btnSetAutoLogon
       // 
