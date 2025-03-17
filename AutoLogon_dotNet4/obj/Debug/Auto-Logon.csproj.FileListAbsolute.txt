@@ -9,3 +9,14 @@ C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\A
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto-Logon.csproj.CoreCompileInputs.cache
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto-Logon.exe
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto-Logon.pdb
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\bin\Debug\Auto-Logon.exe.config
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\bin\Debug\Auto-Logon.exe
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\bin\Debug\Auto-Logon.pdb
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.csproj.AssemblyReference.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto_Logon.FrmMain.resources
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto_Logon.Properties.Resources.resources
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.csproj.GenerateResource.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.exe.licenses
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.csproj.CoreCompileInputs.cache
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.exe
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\AutoLogon_dotNet4\obj\Debug\Auto-Logon.pdb
