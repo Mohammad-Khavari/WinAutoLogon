@@ -9,3 +9,4 @@ C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\bin\Debug\A
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\bin\Debug\Auto-Logon.pdb
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto-Logon.exe
 C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto-Logon.pdb
+C:\Users\Mohammad\source\repos\PassReveal_dotNet4\PassReveal_dotNet4\obj\Debug\Auto_Logon.FrmMain.resources

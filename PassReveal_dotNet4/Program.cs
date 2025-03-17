@@ -1,11 +1,7 @@
-﻿using AutologonDecryptor;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
 
-namespace AutologonDecryptor
+namespace Auto_Logon
 {
   internal static class Program
   {
