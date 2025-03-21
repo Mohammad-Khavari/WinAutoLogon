@@ -11,71 +11,64 @@ namespace Auto_Logon
   {
     #region Windows API structures and imports
     // Windows API structures and imports
-    [StructLayout(LayoutKind.Sequential)]
-    private struct LSA_OBJECT_ATTRIBUTES
-    {
-      public int Length;
-      public IntPtr RootDirectory;
-      public IntPtr ObjectName;
-      public uint Attributes;
-      public IntPtr SecurityDescriptor;
-      public IntPtr SecurityQualityOfService;
-    }
+    //[StructLayout(LayoutKind.Sequential)]
+    //private struct LSA_OBJECT_ATTRIBUTES
+    //{
+    //  public int Length;
+    //  public IntPtr RootDirectory;
+    //  public IntPtr ObjectName;
+    //  public uint Attributes;
+    //  public IntPtr SecurityDescriptor;
+    //  public IntPtr SecurityQualityOfService;
+    //}
 
-    [StructLayout(LayoutKind.Sequential)]
-    private struct LSA_UNICODE_STRING
-    {
-      public ushort Length;
-      public ushort MaximumLength;
-      public IntPtr Buffer;
-    }
+    //[StructLayout(LayoutKind.Sequential)]
+    //private struct LSA_UNICODE_STRING
+    //{
+    //  public ushort Length;
+    //  public ushort MaximumLength;
+    //  public IntPtr Buffer;
+    //}
 
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern uint LsaOpenPolicy(
-        ref LSA_UNICODE_STRING systemName,
-        ref LSA_OBJECT_ATTRIBUTES objectAttributes,
-        uint desiredAccess,
-        out IntPtr policyHandle);
+    //[DllImport("advapi32.dll", SetLastError = true)]
+    //private static extern uint LsaOpenPolicy(
+    //    ref LSA_UNICODE_STRING systemName,
+    //    ref LSA_OBJECT_ATTRIBUTES objectAttributes,
+    //    uint desiredAccess,
+    //    out IntPtr policyHandle);
 
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern uint LsaRetrievePrivateData(
-        IntPtr policyHandle,
-        ref LSA_UNICODE_STRING keyName,
-        out IntPtr privateData);
+    //[DllImport("advapi32.dll", SetLastError = true)]
+    //private static extern uint LsaRetrievePrivateData(
+    //    IntPtr policyHandle,
+    //    ref LSA_UNICODE_STRING keyName,
+    //    out IntPtr privateData);
 
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern uint LsaStorePrivateData(
-        IntPtr policyHandle,
-        ref LSA_UNICODE_STRING keyName,
-        ref LSA_UNICODE_STRING privateData);
+    //[DllImport("advapi32.dll", SetLastError = true)]
+    //private static extern uint LsaStorePrivateData(
+    //    IntPtr policyHandle,
+    //    ref LSA_UNICODE_STRING keyName,
+    //    ref LSA_UNICODE_STRING privateData);
 
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern uint LsaClose(IntPtr objectHandle);
+    //[DllImport("advapi32.dll", SetLastError = true)]
+    //private static extern uint LsaClose(IntPtr objectHandle);
 
-    [DllImport("advapi32.dll", SetLastError = true)]
-    private static extern uint LsaNtStatusToWinError(uint status);
+    //[DllImport("advapi32.dll", SetLastError = true)]
+    //private static extern uint LsaNtStatusToWinError(uint status);
 
-    private const uint STATUS_SUCCESS = 0x00000000;
-    private const uint POLICY_GET_PRIVATE_INFORMATION = 0x00000004;
-    private const uint POLICY_CREATE_SECRET = 0x00000008;
+    //private const uint STATUS_SUCCESS = 0x00000000;
+    //private const uint POLICY_GET_PRIVATE_INFORMATION = 0x00000004;
+    //private const uint POLICY_CREATE_SECRET = 0x00000008;
     #endregion
+
+    private readonly WindowsApiHelper WinAPI = new WindowsApiHelper();
+
     public FrmMain()
     {
       InitializeComponent();
       //CheckAndDecrypt();
       btnDecrypt.Click += (s,e)=>CheckAndDecrypt();
-      btnSetAutoLogon.Click += (s, e) => SetAutoLogon();
-      
-    }
+      btnSetAutoLogon.Click += (s, e) => SetAutoLogon.SetAutoLogonConfig(txtUserName.Text,txtDomain.Text,txtPassword.Text);
 
-    private void BtnDeactive_Click(object sender, EventArgs e)
-    {
-      throw new NotImplementedException();
-    }
-
-    private void BtnSetAutoLogon_Click(object sender, EventArgs e)
-    {
-      throw new NotImplementedException();
     }
 
     private void CheckAndDecrypt()
@@ -144,16 +137,24 @@ namespace Auto_Logon
           object autoAdminLogon = GetRegistryValue(key64,"AutoAdminLogon",ref debugInfo);
           if (autoAdminLogon == null || autoAdminLogon.ToString() != "1")
           {
-            MessageBox.Show("Autologon is not enabled (AutoAdminLogon != 1).",
-                "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            picInactive.Visible = true;
+            picActive.Visible = false;
+            btnDeactive.Enabled = false;
+            //MessageBox.Show("Autologon is not enabled (AutoAdminLogon != 1).",
+            //  "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
           }
           else
           {
-            MessageBox.Show("Auto Logon is active!");
+            
+            picInactive.Visible = false;
+            picActive.Visible = true;
+            btnDeactive.Enabled = true;
+            //MessageBox.Show("Auto Logon is active!");
           }
         }
-
+        
         string password = GetAutologonPassword();
+
         lblPassword.Text = $"Password: {(password != null ? password : "Not found or failed to decrypt")}";
       }
       catch (Exception ex)
@@ -191,147 +192,150 @@ namespace Auto_Logon
       return value;
     }
 
-    private static string GetAutologonPassword()
+    private string GetAutologonPassword()
     {
       IntPtr policyHandle = IntPtr.Zero;
-      LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
-      objectAttributes.Length = 0;
-      objectAttributes.RootDirectory = IntPtr.Zero;
-      objectAttributes.Attributes = 0;
-      objectAttributes.SecurityDescriptor = IntPtr.Zero;
-      objectAttributes.SecurityQualityOfService = IntPtr.Zero;
+      //LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
+      //objectAttributes.Length = 0;
+      //objectAttributes.RootDirectory = IntPtr.Zero;
+      //objectAttributes.Attributes = 0;
+      //objectAttributes.SecurityDescriptor = IntPtr.Zero;
+      //objectAttributes.SecurityQualityOfService = IntPtr.Zero;
+   
+      //LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
+      //uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION, out policyHandle);
 
-      LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
-      uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION, out policyHandle);
-
-      if (result != STATUS_SUCCESS)
+      if (!WinAPI.OpenPolicy(null,out policyHandle))
       {
-        throw new Exception($"LsaOpenPolicy failed: {LsaNtStatusToWinError(result)}");
+        throw new Exception($"LsaOpenPolicy failed: {Marshal.GetLastWin32Error()}");
       }
 
       try
       {
-        string keyNameStr = "DefaultPassword";
-        LSA_UNICODE_STRING keyName = CreateLsaUnicodeString(keyNameStr);
-        IntPtr privateData = IntPtr.Zero;
+        //string keyNameStr = "DefaultPassword";
+        //LSA_UNICODE_STRING keyName = CreateLsaUnicodeString(keyNameStr);
+        //IntPtr privateData = IntPtr.Zero;
+        //result = LsaRetrievePrivateData(policyHandle, ref keyName, out privateData);
 
-        result = LsaRetrievePrivateData(policyHandle, ref keyName, out privateData);
-
-        if (result != STATUS_SUCCESS)
+        if (WinAPI.RetrievePrivateData(policyHandle, "DefaultPassword", out string pw))
         {
-          return null;
+          return pw; // Return the retrieved pw or null if not found
         }
 
-        if (privateData != IntPtr.Zero)
-        {
-          LSA_UNICODE_STRING secretData = (LSA_UNICODE_STRING)Marshal.PtrToStructure(privateData, typeof(LSA_UNICODE_STRING));
-          return Marshal.PtrToStringUni(secretData.Buffer, secretData.Length / 2);
-        }
+        return null; // Return null if the pw was not found
+
+        //if (privateData != IntPtr.Zero)
+        //{
+        //  LSA_UNICODE_STRING secretData = (LSA_UNICODE_STRING)Marshal.PtrToStructure(privateData, typeof(LSA_UNICODE_STRING));
+        //  return Marshal.PtrToStringUni(secretData.Buffer, secretData.Length / 2);
+        //}
       }
       finally
       {
-        LsaClose(policyHandle);
+        WinAPI.CloseHandle(policyHandle);
+        //LsaClose(policyHandle);
       }
 
-      return null;
+      //return null;
     }
 
-    private void SetAutoLogon()
-    {
-      try
-      {
-        if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
-        {
-          MessageBox.Show("This program must be run with administrative privileges.",
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;
-        }
-        string regPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
-        string username = txtUserName.Text;
-        string domain = txtDomain.Text;
-        string password = txtPassword.Text;
+    #region Old method to set autologon
+    //private void SetAutoLogon()
+    //{
+    //  try
+    //  {
+    //    if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+    //    {
+    //      MessageBox.Show("This program must be run with administrative privileges.",
+    //          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //      return;
+    //    }
+    //    string regPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
+    //    string username = txtUserName.Text;
+    //    string domain = txtDomain.Text;
+    //    string pw = txtPassword.Text;
 
-        // Check if any of the fields are empty
-        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(domain) || string.IsNullOrEmpty(password))
-        {
-          MessageBox.Show("Please fill in all fields.",
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;
-        }
+    //    // Check if any of the fields are empty
+    //    if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(domain) || string.IsNullOrEmpty(pw))
+    //    {
+    //      MessageBox.Show("Please fill in all fields.",
+    //          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //      return;
+    //    }
 
-        // Check if the password is too long
-        if (password.Length > 127)
-        {
-          MessageBox.Show("The password is too long (max 127 characters).",
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;
-        }
+    //    // Check if the pw is too long
+    //    if (pw.Length > 127)
+    //    {
+    //      MessageBox.Show("The pw is too long (max 127 characters).",
+    //          "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //      return;
+    //    }
 
-        // Set the registry values
-        using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
-                    .OpenSubKey(regPath, writable: true))
-        {
-          if (key == null)
-          {
-            MessageBox.Show("Error: Could not open registry key.",
-                "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return;
-          }
+    //    // Set the registry values
+    //    using (RegistryKey key = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64)
+    //                .OpenSubKey(regPath, writable: true))
+    //    {
+    //      if (key == null)
+    //      {
+    //        MessageBox.Show("Error: Could not open registry key.",
+    //            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //        return;
+    //      }
 
-          // TODO
-          key.SetValue("DefaultUserName", username,RegistryValueKind.String);
-          key.SetValue("DefaultDomainName", string.IsNullOrEmpty(domain) ? "." : domain, RegistryValueKind.String);
-          key.SetValue("AutoAdminLogon", 1, RegistryValueKind.String);
-          //key.SetValue("ForceAutoLogon", 1);
-          //key.SetValue("DefaultPassword", password);
-        }
+    //      // TODO
+    //      key.SetValue("DefaultUserName", username,RegistryValueKind.String);
+    //      key.SetValue("DefaultDomainName", string.IsNullOrEmpty(domain) ? "." : domain, RegistryValueKind.String);
+    //      key.SetValue("AutoAdminLogon", 1, RegistryValueKind.String);
+    //      //key.SetValue("ForceAutoLogon", 1);
+    //      //key.SetValue("DefaultPassword", pw);
+    //    }
 
-        // Encrypt and set the password in LSA
-        IntPtr policyHandle = IntPtr.Zero;
-        LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
-        objectAttributes.Length = 0;
-        LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
-        uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION | POLICY_CREATE_SECRET, out policyHandle);
+    //    // Encrypt and set the pw in LSA
+    //    IntPtr policyHandle = IntPtr.Zero;
+    //    LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
+    //    objectAttributes.Length = 0;
+    //    LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
+    //    uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION | POLICY_CREATE_SECRET, out policyHandle);
 
-        if (result != STATUS_SUCCESS)
-        {
-          throw new Exception($"LsaOpenPolicy failed: {LsaNtStatusToWinError(result)}");
-        }
+    //    if (result != STATUS_SUCCESS)
+    //    {
+    //      throw new Exception($"LsaOpenPolicy failed: {LsaNtStatusToWinError(result)}");
+    //    }
 
-        try
-        {
-          LSA_UNICODE_STRING keyName = CreateLsaUnicodeString("DefaultPassword");
-          LSA_UNICODE_STRING secretData = CreateLsaUnicodeString(password);
-          result = LsaStorePrivateData(policyHandle, ref keyName, ref secretData);
-          if (result != STATUS_SUCCESS)
-          {
-            throw new Exception($"LsaStorePrivateData failed: {LsaNtStatusToWinError(result)}");
-          }
-          MessageBox.Show("Autologon configured successfully!",
-                        "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-          CheckAndDecrypt(); // Refresh the display
-        }
-        finally
-        {
-          LsaClose(policyHandle);
-        }
+    //    try
+    //    {
+    //      LSA_UNICODE_STRING keyName = CreateLsaUnicodeString("DefaultPassword");
+    //      LSA_UNICODE_STRING secretData = CreateLsaUnicodeString(pw);
+    //      result = LsaStorePrivateData(policyHandle, ref keyName, ref secretData);
+    //      if (result != STATUS_SUCCESS)
+    //      {
+    //        throw new Exception($"LsaStorePrivateData failed: {LsaNtStatusToWinError(result)}");
+    //      }
+    //      MessageBox.Show("Autologon configured successfully!",
+    //                    "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    //      CheckAndDecrypt(); // Refresh the display
+    //    }
+    //    finally
+    //    {
+    //      LsaClose(policyHandle);
+    //    }
 
-      }
-      catch (Exception ex)
-      {
-        MessageBox.Show($"Error: {ex.Message}",
-            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-      }
-    }
-
-    private static LSA_UNICODE_STRING CreateLsaUnicodeString(string value)
-    {
-      LSA_UNICODE_STRING unicodeString = new LSA_UNICODE_STRING();
-      unicodeString.Buffer = Marshal.StringToHGlobalUni(value);
-      unicodeString.Length = (ushort)(value.Length * 2);
-      unicodeString.MaximumLength = (ushort)(unicodeString.Length + 2);
-      return unicodeString;
-    }
+    //  }
+    //  catch (Exception ex)
+    //  {
+    //    MessageBox.Show($"Error: {ex.Message}",
+    //        "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    //  }
+    //}
+    #endregion
+    //private static LSA_UNICODE_STRING CreateLsaUnicodeString(string value)
+    //{
+    //  LSA_UNICODE_STRING unicodeString = new LSA_UNICODE_STRING();
+    //  unicodeString.Buffer = Marshal.StringToHGlobalUni(value);
+    //  unicodeString.Length = (ushort)(value.Length * 2);
+    //  unicodeString.MaximumLength = (ushort)(unicodeString.Length + 2);
+    //  return unicodeString;
+    //}
 
     private void btnExit_Click(object sender, EventArgs e)
     {
@@ -346,6 +350,36 @@ namespace Auto_Logon
     private void btnDeactive_Click_1(object sender, EventArgs e)
     {
       DeactivateAutoLogon.Deactivate();
+    }
+
+    private string[] GetUsernameAndDomainName() 
+    {
+      try
+      {
+        string[] strings = new string[2];
+        strings[0] = WindowsIdentity.GetCurrent().Name.Split('\\')[1];
+        strings[1] = WindowsIdentity.GetCurrent().Name.Split('\\')[0];
+        return strings;
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show($"Error: {ex.Message}",
+            "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        return new string[] { "Error", "Error" };
+      }
+      
+    }
+
+    private void FrmMain_Load(object sender, EventArgs e)
+    {
+      string[] info = GetUsernameAndDomainName();
+
+      txtUserName.Text = info[0];
+      txtDomain.Text = info[1];
+
+      //txtUserName.Text = Environment.UserName;
+      //txtDomain.Text = Environment.UserDomainName;
+
     }
   }
 }

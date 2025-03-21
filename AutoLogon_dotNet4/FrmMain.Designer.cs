@@ -30,12 +30,14 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-      this.pictureBox1 = new System.Windows.Forms.PictureBox();
+      this.picInactive = new System.Windows.Forms.PictureBox();
+      this.picActive = new System.Windows.Forms.PictureBox();
       this.btnDecrypt = new System.Windows.Forms.Button();
       this.lblPassword = new System.Windows.Forms.Label();
       this.lblDomain = new System.Windows.Forms.Label();
       this.lblUsername = new System.Windows.Forms.Label();
       this.BtnShowPW = new System.Windows.Forms.Button();
+      this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.btnExit = new System.Windows.Forms.Button();
       this.btnDeactive = new System.Windows.Forms.Button();
       this.btnSetAutoLogon = new System.Windows.Forms.Button();
@@ -49,11 +51,14 @@
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.picInactive)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picActive)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.SuspendLayout();
       // 
       // splitContainer1
       // 
+      this.splitContainer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
       this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
       this.splitContainer1.Location = new System.Drawing.Point(0, 0);
       this.splitContainer1.Name = "splitContainer1";
@@ -61,7 +66,8 @@
       // 
       // splitContainer1.Panel1
       // 
-      this.splitContainer1.Panel1.Controls.Add(this.pictureBox1);
+      this.splitContainer1.Panel1.Controls.Add(this.picInactive);
+      this.splitContainer1.Panel1.Controls.Add(this.picActive);
       this.splitContainer1.Panel1.Controls.Add(this.btnDecrypt);
       this.splitContainer1.Panel1.Controls.Add(this.lblPassword);
       this.splitContainer1.Panel1.Controls.Add(this.lblDomain);
@@ -69,7 +75,9 @@
       // 
       // splitContainer1.Panel2
       // 
+      this.splitContainer1.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
       this.splitContainer1.Panel2.Controls.Add(this.BtnShowPW);
+      this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
       this.splitContainer1.Panel2.Controls.Add(this.btnExit);
       this.splitContainer1.Panel2.Controls.Add(this.btnDeactive);
       this.splitContainer1.Panel2.Controls.Add(this.btnSetAutoLogon);
@@ -80,32 +88,45 @@
       this.splitContainer1.Panel2.Controls.Add(this.txtDomain);
       this.splitContainer1.Panel2.Controls.Add(this.txtUserName);
       this.splitContainer1.Size = new System.Drawing.Size(384, 273);
-      this.splitContainer1.SplitterDistance = 121;
-      this.splitContainer1.TabIndex = 3;
+      this.splitContainer1.SplitterDistance = 109;
+      this.splitContainer1.SplitterWidth = 1;
+      this.splitContainer1.TabIndex = 0;
       // 
-      // pictureBox1
+      // picInactive
       // 
-      this.pictureBox1.Image = global::Auto_Logon.Properties.Resources._lock;
-      this.pictureBox1.Location = new System.Drawing.Point(272, 3);
-      this.pictureBox1.Name = "pictureBox1";
-      this.pictureBox1.Size = new System.Drawing.Size(109, 115);
-      this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-      this.pictureBox1.TabIndex = 12;
-      this.pictureBox1.TabStop = false;
+      this.picInactive.Image = global::Auto_Logon.Properties.Resources.inactive;
+      this.picInactive.Location = new System.Drawing.Point(280, 3);
+      this.picInactive.Name = "picInactive";
+      this.picInactive.Size = new System.Drawing.Size(104, 102);
+      this.picInactive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.picInactive.TabIndex = 20;
+      this.picInactive.TabStop = false;
+      this.picInactive.Visible = false;
+      // 
+      // picActive
+      // 
+      this.picActive.Image = global::Auto_Logon.Properties.Resources.Active;
+      this.picActive.Location = new System.Drawing.Point(288, 3);
+      this.picActive.Name = "picActive";
+      this.picActive.Size = new System.Drawing.Size(93, 103);
+      this.picActive.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.picActive.TabIndex = 20;
+      this.picActive.TabStop = false;
+      this.picActive.Visible = false;
       // 
       // btnDecrypt
       // 
-      this.btnDecrypt.Location = new System.Drawing.Point(10, 87);
+      this.btnDecrypt.Location = new System.Drawing.Point(10, 82);
       this.btnDecrypt.Name = "btnDecrypt";
       this.btnDecrypt.Size = new System.Drawing.Size(75, 23);
-      this.btnDecrypt.TabIndex = 11;
-      this.btnDecrypt.Text = "Refresh";
+      this.btnDecrypt.TabIndex = 0;
+      this.btnDecrypt.Text = "Check";
       this.btnDecrypt.UseVisualStyleBackColor = true;
       // 
       // lblPassword
       // 
       this.lblPassword.AutoSize = true;
-      this.lblPassword.Location = new System.Drawing.Point(10, 61);
+      this.lblPassword.Location = new System.Drawing.Point(10, 56);
       this.lblPassword.Name = "lblPassword";
       this.lblPassword.Size = new System.Drawing.Size(56, 13);
       this.lblPassword.TabIndex = 10;
@@ -114,7 +135,7 @@
       // lblDomain
       // 
       this.lblDomain.AutoSize = true;
-      this.lblDomain.Location = new System.Drawing.Point(10, 39);
+      this.lblDomain.Location = new System.Drawing.Point(10, 34);
       this.lblDomain.Name = "lblDomain";
       this.lblDomain.Size = new System.Drawing.Size(46, 13);
       this.lblDomain.TabIndex = 9;
@@ -123,7 +144,7 @@
       // lblUsername
       // 
       this.lblUsername.AutoSize = true;
-      this.lblUsername.Location = new System.Drawing.Point(10, 17);
+      this.lblUsername.Location = new System.Drawing.Point(10, 12);
       this.lblUsername.Name = "lblUsername";
       this.lblUsername.Size = new System.Drawing.Size(58, 13);
       this.lblUsername.TabIndex = 8;
@@ -134,48 +155,59 @@
       this.BtnShowPW.FlatStyle = System.Windows.Forms.FlatStyle.System;
       this.BtnShowPW.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.BtnShowPW.ForeColor = System.Drawing.Color.Blue;
-      this.BtnShowPW.Location = new System.Drawing.Point(272, 65);
+      this.BtnShowPW.Location = new System.Drawing.Point(243, 75);
       this.BtnShowPW.Margin = new System.Windows.Forms.Padding(0);
       this.BtnShowPW.Name = "BtnShowPW";
-      this.BtnShowPW.Size = new System.Drawing.Size(39, 22);
-      this.BtnShowPW.TabIndex = 17;
+      this.BtnShowPW.Size = new System.Drawing.Size(28, 22);
+      this.BtnShowPW.TabIndex = 3;
       this.BtnShowPW.Text = "👁️";
       this.BtnShowPW.UseVisualStyleBackColor = false;
       this.BtnShowPW.Click += new System.EventHandler(this.BtnShowPW_Click);
       // 
+      // pictureBox1
+      // 
+      this.pictureBox1.Image = global::Auto_Logon.Properties.Resources.lock_clean;
+      this.pictureBox1.Location = new System.Drawing.Point(287, 7);
+      this.pictureBox1.Name = "pictureBox1";
+      this.pictureBox1.Size = new System.Drawing.Size(106, 88);
+      this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+      this.pictureBox1.TabIndex = 12;
+      this.pictureBox1.TabStop = false;
+      // 
       // btnExit
       // 
-      this.btnExit.Location = new System.Drawing.Point(225, 102);
+      this.btnExit.Location = new System.Drawing.Point(223, 131);
       this.btnExit.Name = "btnExit";
       this.btnExit.Size = new System.Drawing.Size(75, 23);
-      this.btnExit.TabIndex = 17;
+      this.btnExit.TabIndex = 6;
       this.btnExit.Text = "Exit";
       this.btnExit.UseVisualStyleBackColor = true;
       this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
       // 
       // btnDeactive
       // 
-      this.btnDeactive.Location = new System.Drawing.Point(144, 102);
+      this.btnDeactive.Enabled = false;
+      this.btnDeactive.Location = new System.Drawing.Point(142, 131);
       this.btnDeactive.Name = "btnDeactive";
       this.btnDeactive.Size = new System.Drawing.Size(75, 23);
-      this.btnDeactive.TabIndex = 18;
+      this.btnDeactive.TabIndex = 5;
       this.btnDeactive.Text = "Deactivate";
       this.btnDeactive.UseVisualStyleBackColor = true;
       this.btnDeactive.Click += new System.EventHandler(this.btnDeactive_Click_1);
       // 
       // btnSetAutoLogon
       // 
-      this.btnSetAutoLogon.Location = new System.Drawing.Point(63, 102);
+      this.btnSetAutoLogon.Location = new System.Drawing.Point(61, 131);
       this.btnSetAutoLogon.Name = "btnSetAutoLogon";
       this.btnSetAutoLogon.Size = new System.Drawing.Size(75, 23);
-      this.btnSetAutoLogon.TabIndex = 19;
+      this.btnSetAutoLogon.TabIndex = 4;
       this.btnSetAutoLogon.Text = "Activate";
       this.btnSetAutoLogon.UseVisualStyleBackColor = true;
       // 
       // lblPW
       // 
       this.lblPW.AutoSize = true;
-      this.lblPW.Location = new System.Drawing.Point(10, 68);
+      this.lblPW.Location = new System.Drawing.Point(8, 78);
       this.lblPW.Name = "lblPW";
       this.lblPW.Size = new System.Drawing.Size(56, 13);
       this.lblPW.TabIndex = 14;
@@ -184,7 +216,7 @@
       // lblDM
       // 
       this.lblDM.AutoSize = true;
-      this.lblDM.Location = new System.Drawing.Point(10, 42);
+      this.lblDM.Location = new System.Drawing.Point(8, 52);
       this.lblDM.Name = "lblDM";
       this.lblDM.Size = new System.Drawing.Size(46, 13);
       this.lblDM.TabIndex = 15;
@@ -193,7 +225,7 @@
       // lblUName
       // 
       this.lblUName.AutoSize = true;
-      this.lblUName.Location = new System.Drawing.Point(10, 16);
+      this.lblUName.Location = new System.Drawing.Point(8, 26);
       this.lblUName.Name = "lblUName";
       this.lblUName.Size = new System.Drawing.Size(61, 13);
       this.lblUName.TabIndex = 16;
@@ -201,25 +233,25 @@
       // 
       // txtPassword
       // 
-      this.txtPassword.Location = new System.Drawing.Point(71, 65);
+      this.txtPassword.Location = new System.Drawing.Point(69, 75);
       this.txtPassword.Name = "txtPassword";
-      this.txtPassword.Size = new System.Drawing.Size(198, 20);
-      this.txtPassword.TabIndex = 11;
+      this.txtPassword.Size = new System.Drawing.Size(174, 20);
+      this.txtPassword.TabIndex = 2;
       this.txtPassword.UseSystemPasswordChar = true;
       // 
       // txtDomain
       // 
-      this.txtDomain.Location = new System.Drawing.Point(71, 39);
+      this.txtDomain.Location = new System.Drawing.Point(69, 49);
       this.txtDomain.Name = "txtDomain";
-      this.txtDomain.Size = new System.Drawing.Size(198, 20);
-      this.txtDomain.TabIndex = 12;
+      this.txtDomain.Size = new System.Drawing.Size(174, 20);
+      this.txtDomain.TabIndex = 1;
       // 
       // txtUserName
       // 
-      this.txtUserName.Location = new System.Drawing.Point(71, 13);
+      this.txtUserName.Location = new System.Drawing.Point(69, 23);
       this.txtUserName.Name = "txtUserName";
-      this.txtUserName.Size = new System.Drawing.Size(198, 20);
-      this.txtUserName.TabIndex = 13;
+      this.txtUserName.Size = new System.Drawing.Size(174, 20);
+      this.txtUserName.TabIndex = 0;
       // 
       // FrmMain
       // 
@@ -234,12 +266,15 @@
       this.Name = "FrmMain";
       this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
       this.Text = "Auto Logon";
+      this.Load += new System.EventHandler(this.FrmMain_Load);
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel1.PerformLayout();
       this.splitContainer1.Panel2.ResumeLayout(false);
       this.splitContainer1.Panel2.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
+      ((System.ComponentModel.ISupportInitialize)(this.picInactive)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.picActive)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.ResumeLayout(false);
 
@@ -262,6 +297,8 @@
     private System.Windows.Forms.TextBox txtUserName;
     private System.Windows.Forms.Button BtnShowPW;
     private System.Windows.Forms.PictureBox pictureBox1;
+    private System.Windows.Forms.PictureBox picActive;
+    private System.Windows.Forms.PictureBox picInactive;
   }
 }
 
