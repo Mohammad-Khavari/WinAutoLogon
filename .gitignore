@@ -1,4 +1,7 @@
 .git
 .vs
-.gitPassReveal_dotNet4/bin/
-.gitPassReveal_dotNet4/obj/
+/bin/
+/obj/
+*.pfx
+/Resources/
+*.bmp

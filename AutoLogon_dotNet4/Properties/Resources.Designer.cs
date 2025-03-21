@@ -63,9 +63,29 @@ namespace Auto_Logon.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap _lock {
+        internal static System.Drawing.Bitmap Active {
             get {
-                object obj = ResourceManager.GetObject("lock", resourceCulture);
+                object obj = ResourceManager.GetObject("Active", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap inactive {
+            get {
+                object obj = ResourceManager.GetObject("inactive", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap lock_clean {
+            get {
+                object obj = ResourceManager.GetObject("lock_clean", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
