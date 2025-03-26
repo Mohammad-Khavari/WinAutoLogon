@@ -1,65 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Windows.Forms;
+using System.Windows.Media;
 using Microsoft.Win32;
-
 
 namespace Auto_Logon
 {
   public partial class FrmMain : Form
   {
-    #region Windows API structures and imports
-    // Windows API structures and imports
-    //[StructLayout(LayoutKind.Sequential)]
-    //private struct LSA_OBJECT_ATTRIBUTES
-    //{
-    //  public int Length;
-    //  public IntPtr RootDirectory;
-    //  public IntPtr ObjectName;
-    //  public uint Attributes;
-    //  public IntPtr SecurityDescriptor;
-    //  public IntPtr SecurityQualityOfService;
-    //}
-
-    //[StructLayout(LayoutKind.Sequential)]
-    //private struct LSA_UNICODE_STRING
-    //{
-    //  public ushort Length;
-    //  public ushort MaximumLength;
-    //  public IntPtr Buffer;
-    //}
-
-    //[DllImport("advapi32.dll", SetLastError = true)]
-    //private static extern uint LsaOpenPolicy(
-    //    ref LSA_UNICODE_STRING systemName,
-    //    ref LSA_OBJECT_ATTRIBUTES objectAttributes,
-    //    uint desiredAccess,
-    //    out IntPtr policyHandle);
-
-    //[DllImport("advapi32.dll", SetLastError = true)]
-    //private static extern uint LsaRetrievePrivateData(
-    //    IntPtr policyHandle,
-    //    ref LSA_UNICODE_STRING keyName,
-    //    out IntPtr privateData);
-
-    //[DllImport("advapi32.dll", SetLastError = true)]
-    //private static extern uint LsaStorePrivateData(
-    //    IntPtr policyHandle,
-    //    ref LSA_UNICODE_STRING keyName,
-    //    ref LSA_UNICODE_STRING privateData);
-
-    //[DllImport("advapi32.dll", SetLastError = true)]
-    //private static extern uint LsaClose(IntPtr objectHandle);
-
-    //[DllImport("advapi32.dll", SetLastError = true)]
-    //private static extern uint LsaNtStatusToWinError(uint status);
-
-    //private const uint STATUS_SUCCESS = 0x00000000;
-    //private const uint POLICY_GET_PRIVATE_INFORMATION = 0x00000004;
-    //private const uint POLICY_CREATE_SECRET = 0x00000008;
-    #endregion
-
     private readonly WindowsApiHelper WinAPI = new WindowsApiHelper();
 
     public FrmMain()
@@ -68,7 +19,6 @@ namespace Auto_Logon
       //CheckAndDecrypt();
       btnDecrypt.Click += (s,e)=>CheckAndDecrypt();
       btnSetAutoLogon.Click += (s, e) => SetAutoLogon.SetAutoLogonConfig(txtUserName.Text,txtDomain.Text,txtPassword.Text);
-
     }
 
     private void CheckAndDecrypt()
@@ -77,9 +27,36 @@ namespace Auto_Logon
       {
         if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
         {
-          MessageBox.Show("This program must be run with administrative privileges.",
-              "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-          return;
+          DialogResult result = MessageBox.Show("This application requires administrator privileges to function properly.\n " +
+                                                "Would you like to restart the application with admin rights?",
+                                                "Administrator Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+          if (result == DialogResult.Yes)
+          {
+            // Restart with admin rights
+            ProcessStartInfo processInfo = new ProcessStartInfo
+            {
+              UseShellExecute = true,
+              FileName = Assembly.GetExecutingAssembly().Location,
+              Verb = "runas" // This triggers UAC prompt
+            };
+
+            try
+            {
+              Process.Start(processInfo);
+              Application.Exit(); // Close current instance
+            }
+            catch (Exception ex)
+            {
+              MessageBox.Show($"Failed to restart with admin privileges: {ex.Message}",
+                  "Error",
+                  MessageBoxButtons.OK,
+                  MessageBoxIcon.Error);
+            }
+          }
+          else
+          {
+            return;
+          }
         }
 
         string regPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon";
@@ -195,16 +172,7 @@ namespace Auto_Logon
     private string GetAutologonPassword()
     {
       IntPtr policyHandle = IntPtr.Zero;
-      //LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
-      //objectAttributes.Length = 0;
-      //objectAttributes.RootDirectory = IntPtr.Zero;
-      //objectAttributes.Attributes = 0;
-      //objectAttributes.SecurityDescriptor = IntPtr.Zero;
-      //objectAttributes.SecurityQualityOfService = IntPtr.Zero;
-   
-      //LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
-      //uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION, out policyHandle);
-
+      
       if (!WinAPI.OpenPolicy(null,out policyHandle))
       {
         throw new Exception($"LsaOpenPolicy failed: {Marshal.GetLastWin32Error()}");
@@ -212,11 +180,6 @@ namespace Auto_Logon
 
       try
       {
-        //string keyNameStr = "DefaultPassword";
-        //LSA_UNICODE_STRING keyName = CreateLsaUnicodeString(keyNameStr);
-        //IntPtr privateData = IntPtr.Zero;
-        //result = LsaRetrievePrivateData(policyHandle, ref keyName, out privateData);
-
         if (WinAPI.RetrievePrivateData(policyHandle, "DefaultPassword", out string pw))
         {
           return pw; // Return the retrieved pw or null if not found
@@ -224,19 +187,12 @@ namespace Auto_Logon
 
         return null; // Return null if the pw was not found
 
-        //if (privateData != IntPtr.Zero)
-        //{
-        //  LSA_UNICODE_STRING secretData = (LSA_UNICODE_STRING)Marshal.PtrToStructure(privateData, typeof(LSA_UNICODE_STRING));
-        //  return Marshal.PtrToStringUni(secretData.Buffer, secretData.Length / 2);
-        //}
       }
       finally
       {
         WinAPI.CloseHandle(policyHandle);
         //LsaClose(policyHandle);
       }
-
-      //return null;
     }
 
     #region Old method to set autologon
@@ -328,15 +284,7 @@ namespace Auto_Logon
     //  }
     //}
     #endregion
-    //private static LSA_UNICODE_STRING CreateLsaUnicodeString(string value)
-    //{
-    //  LSA_UNICODE_STRING unicodeString = new LSA_UNICODE_STRING();
-    //  unicodeString.Buffer = Marshal.StringToHGlobalUni(value);
-    //  unicodeString.Length = (ushort)(value.Length * 2);
-    //  unicodeString.MaximumLength = (ushort)(unicodeString.Length + 2);
-    //  return unicodeString;
-    //}
-
+    
     private void btnExit_Click(object sender, EventArgs e)
     {
       Application.Exit();
@@ -344,7 +292,20 @@ namespace Auto_Logon
 
     private void BtnShowPW_Click(object sender, EventArgs e)
     {
-      txtPassword.UseSystemPasswordChar = !txtPassword.UseSystemPasswordChar;
+      if (!txtPassword.UseSystemPasswordChar)
+      {
+        txtPassword.UseSystemPasswordChar = true;
+        BtnShowPW.Text = "🚫";
+        BtnShowPW.ForeColor = System.Drawing.Color.Red;
+       
+      }
+      else
+      {
+        txtPassword.UseSystemPasswordChar = false;
+        BtnShowPW.Text = "👁️";
+        BtnShowPW.ForeColor = System.Drawing.Color.Blue;
+
+      }
     }
 
     private void btnDeactive_Click_1(object sender, EventArgs e)
@@ -367,7 +328,6 @@ namespace Auto_Logon
             "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         return new string[] { "Error", "Error" };
       }
-      
     }
 
     private void FrmMain_Load(object sender, EventArgs e)
@@ -376,10 +336,10 @@ namespace Auto_Logon
 
       txtUserName.Text = info[0];
       txtDomain.Text = info[1];
-
+      BtnShowPW.Text = "🚫";
+      BtnShowPW.ForeColor = System.Drawing.Color.Red;
       //txtUserName.Text = Environment.UserName;
       //txtDomain.Text = Environment.UserDomainName;
-
     }
   }
 }
