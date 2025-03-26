@@ -61,10 +61,6 @@ namespace Auto_Logon
 
         // Encrypt and set the password in LSA
         IntPtr policyHandle = IntPtr.Zero;
-        //LSA_OBJECT_ATTRIBUTES objectAttributes = new LSA_OBJECT_ATTRIBUTES();
-        //objectAttributes.Length = 0;
-        //LSA_UNICODE_STRING systemName = new LSA_UNICODE_STRING();
-        //uint result = LsaOpenPolicy(ref systemName, ref objectAttributes, POLICY_GET_PRIVATE_INFORMATION | POLICY_CREATE_SECRET, out policyHandle);
 
         if (!WinAPI.OpenPolicy(null,out policyHandle))
         {
@@ -78,13 +74,7 @@ namespace Auto_Logon
           {
             throw new Exception($"LsaStorePrivateData failed: {Marshal.GetLastWin32Error()}");
           }
-          //LSA_UNICODE_STRING keyName = CreateLsaUnicodeString("DefaultPassword");
-          //LSA_UNICODE_STRING secretData = CreateLsaUnicodeString(password);
-          //result = LsaStorePrivateData(policyHandle, ref keyName, ref secretData);
-          //if (result != STATUS_SUCCESS)
-          //{
-          //  throw new Exception($"LsaStorePrivateData failed: {LsaNtStatusToWinError(result)}");
-          //}
+
           MessageBox.Show("Autologon configured successfully!",
                         "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
           //CheckAndDecrypt(); // Refresh the display
