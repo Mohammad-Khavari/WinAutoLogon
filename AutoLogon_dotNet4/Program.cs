@@ -27,8 +27,6 @@ namespace Auto_Logon
       {
         if (!createdNew)
         {
-          //find and activate existing instance
-
           MessageBox.Show("Another instance of the application is already running.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
           Process current = Process.GetCurrentProcess();

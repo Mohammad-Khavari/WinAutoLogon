@@ -30,6 +30,7 @@
     {
       System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+      this.lblCopyMsg = new System.Windows.Forms.Label();
       this.picInactive = new System.Windows.Forms.PictureBox();
       this.picActive = new System.Windows.Forms.PictureBox();
       this.btnDecrypt = new System.Windows.Forms.Button();
@@ -67,6 +68,7 @@
       // 
       // splitContainer1.Panel1
       // 
+      this.splitContainer1.Panel1.Controls.Add(this.lblCopyMsg);
       this.splitContainer1.Panel1.Controls.Add(this.picInactive);
       this.splitContainer1.Panel1.Controls.Add(this.picActive);
       this.splitContainer1.Panel1.Controls.Add(this.btnDecrypt);
@@ -93,6 +95,18 @@
       this.splitContainer1.SplitterDistance = 109;
       this.splitContainer1.SplitterWidth = 1;
       this.splitContainer1.TabIndex = 0;
+      // 
+      // lblCopyMsg
+      // 
+      this.lblCopyMsg.AutoSize = true;
+      this.lblCopyMsg.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+      this.lblCopyMsg.ForeColor = System.Drawing.Color.LimeGreen;
+      this.lblCopyMsg.Location = new System.Drawing.Point(144, 82);
+      this.lblCopyMsg.Name = "lblCopyMsg";
+      this.lblCopyMsg.Size = new System.Drawing.Size(70, 20);
+      this.lblCopyMsg.TabIndex = 18;
+      this.lblCopyMsg.Text = "Copied!";
+      this.lblCopyMsg.Visible = false;
       // 
       // picInactive
       // 
@@ -311,6 +325,7 @@
     private System.Windows.Forms.PictureBox picActive;
     private System.Windows.Forms.PictureBox picInactive;
     private System.Windows.Forms.Label label1;
+    private System.Windows.Forms.Label lblCopyMsg;
   }
 }
 

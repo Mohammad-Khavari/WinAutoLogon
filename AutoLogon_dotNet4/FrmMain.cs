@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Media;
-using Microsoft.Win32;
 
 namespace Auto_Logon
 {
@@ -32,18 +33,22 @@ namespace Auto_Logon
                                                 "Administrator Required", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
           if (result == DialogResult.Yes)
           {
-            // Restart with admin rights
-            ProcessStartInfo processInfo = new ProcessStartInfo
-            {
-              UseShellExecute = true,
-              FileName = Assembly.GetExecutingAssembly().Location,
-              Verb = "runas" // This triggers UAC prompt
-            };
+              this.Close();
+              Application.Exit();
+
+            Thread.Sleep(1000); // Wait for the form to close
 
             try
             {
+              // Restart with admin rights
+              ProcessStartInfo processInfo = new ProcessStartInfo
+              {
+                UseShellExecute = true,
+                FileName = Assembly.GetExecutingAssembly().Location,
+                Verb = "runas" // This triggers UAC prompt
+              };
+              
               Process.Start(processInfo);
-              Application.Exit(); // Close current instance
             }
             catch (Exception ex)
             {
@@ -295,7 +300,7 @@ namespace Auto_Logon
       if (!txtPassword.UseSystemPasswordChar)
       {
         txtPassword.UseSystemPasswordChar = true;
-        BtnShowPW.Text = "🚫";
+        BtnShowPW.Text = "👁️";
         BtnShowPW.ForeColor = System.Drawing.Color.Red;
        
       }
@@ -303,7 +308,7 @@ namespace Auto_Logon
       {
         txtPassword.UseSystemPasswordChar = false;
         BtnShowPW.Text = "👁️";
-        BtnShowPW.ForeColor = System.Drawing.Color.Blue;
+        BtnShowPW.ForeColor = System.Drawing.Color.Green;
 
       }
     }
@@ -336,10 +341,35 @@ namespace Auto_Logon
 
       txtUserName.Text = info[0];
       txtDomain.Text = info[1];
-      BtnShowPW.Text = "🚫";
+      BtnShowPW.Text = "👁️";
       BtnShowPW.ForeColor = System.Drawing.Color.Red;
       //txtUserName.Text = Environment.UserName;
       //txtDomain.Text = Environment.UserDomainName;
+      lblPassword.Click += (s, ev) => CopyToClipboard(lblPassword);
+      lblDomain.Click += (s, ev) => CopyToClipboard(lblDomain);
+      lblUsername.Click += (s, ev) => CopyToClipboard(lblUsername);
+    }
+
+    private async void CopyToClipboard(Label label)
+    {
+      string[] parts = label.Text.Split(':');
+
+      if(parts.Length > 1 && !string.IsNullOrWhiteSpace(parts[1]))
+      {
+        if (parts[1].StartsWith(" Not"))
+        {
+          return;
+        }
+        Clipboard.SetText(parts[1].Trim());
+        
+        lblCopyMsg.Visible = true;
+        await Task.Delay(2000);
+        lblCopyMsg.Visible = false;
+      }
+      else
+      {
+        return;
+      }
     }
   }
 }
