@@ -49,6 +49,7 @@
       this.txtDomain = new System.Windows.Forms.TextBox();
       this.txtUserName = new System.Windows.Forms.TextBox();
       this.label1 = new System.Windows.Forms.Label();
+      this.btnCheckKioskMode = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -79,6 +80,7 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+      this.splitContainer1.Panel2.Controls.Add(this.btnCheckKioskMode);
       this.splitContainer1.Panel2.Controls.Add(this.BtnShowPW);
       this.splitContainer1.Panel2.Controls.Add(this.pictureBox1);
       this.splitContainer1.Panel2.Controls.Add(this.btnExit);
@@ -190,7 +192,7 @@
       // 
       // btnExit
       // 
-      this.btnExit.Location = new System.Drawing.Point(229, 133);
+      this.btnExit.Location = new System.Drawing.Point(242, 133);
       this.btnExit.Name = "btnExit";
       this.btnExit.Size = new System.Drawing.Size(75, 23);
       this.btnExit.TabIndex = 6;
@@ -201,7 +203,7 @@
       // btnDeactive
       // 
       this.btnDeactive.Enabled = false;
-      this.btnDeactive.Location = new System.Drawing.Point(148, 133);
+      this.btnDeactive.Location = new System.Drawing.Point(161, 133);
       this.btnDeactive.Name = "btnDeactive";
       this.btnDeactive.Size = new System.Drawing.Size(75, 23);
       this.btnDeactive.TabIndex = 5;
@@ -211,7 +213,8 @@
       // 
       // btnSetAutoLogon
       // 
-      this.btnSetAutoLogon.Location = new System.Drawing.Point(67, 133);
+      this.btnSetAutoLogon.Enabled = false;
+      this.btnSetAutoLogon.Location = new System.Drawing.Point(80, 133);
       this.btnSetAutoLogon.Name = "btnSetAutoLogon";
       this.btnSetAutoLogon.Size = new System.Drawing.Size(75, 23);
       this.btnSetAutoLogon.TabIndex = 4;
@@ -252,6 +255,7 @@
       this.txtPassword.Size = new System.Drawing.Size(174, 20);
       this.txtPassword.TabIndex = 2;
       this.txtPassword.UseSystemPasswordChar = true;
+      this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
       // 
       // txtDomain
       // 
@@ -271,12 +275,22 @@
       // 
       this.label1.Font = new System.Drawing.Font("Arial Narrow", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
       this.label1.ForeColor = System.Drawing.SystemColors.ControlLight;
-      this.label1.Location = new System.Drawing.Point(310, 143);
+      this.label1.Location = new System.Drawing.Point(291, 101);
       this.label1.Name = "label1";
       this.label1.Size = new System.Drawing.Size(70, 18);
       this.label1.TabIndex = 17;
       this.label1.Text = "MK® 2025";
       this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+      // 
+      // btnCheckKioskMode
+      // 
+      this.btnCheckKioskMode.Location = new System.Drawing.Point(3, 133);
+      this.btnCheckKioskMode.Name = "btnCheckKioskMode";
+      this.btnCheckKioskMode.Size = new System.Drawing.Size(71, 23);
+      this.btnCheckKioskMode.TabIndex = 18;
+      this.btnCheckKioskMode.Text = "Check K";
+      this.btnCheckKioskMode.UseVisualStyleBackColor = true;
+      this.btnCheckKioskMode.Click += new System.EventHandler(this.btnCheckKioskMode_Click);
       // 
       // FrmMain
       // 
@@ -326,6 +340,7 @@
     private System.Windows.Forms.PictureBox picInactive;
     private System.Windows.Forms.Label label1;
     private System.Windows.Forms.Label lblCopyMsg;
+    private System.Windows.Forms.Button btnCheckKioskMode;
   }
 }
 

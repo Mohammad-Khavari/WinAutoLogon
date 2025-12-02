@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,9 +18,9 @@ namespace Auto_Logon
     public FrmMain()
     {
       InitializeComponent();
-      //CheckAndDecrypt();
+      
       btnDecrypt.Click += (s,e)=>CheckAndDecrypt();
-      btnSetAutoLogon.Click += (s, e) => SetAutoLogon.SetAutoLogonConfig(txtUserName.Text,txtDomain.Text,txtPassword.Text);
+      btnSetAutoLogon.Click += (s, e) => SetAutoLogon.SetAutoLogonConfig(txtUserName.Text,txtDomain.Text,txtPassword.Text,CheckAndDecrypt);
     }
 
     private void CheckAndDecrypt()
@@ -348,6 +349,9 @@ namespace Auto_Logon
       lblPassword.Click += (s, ev) => CopyToClipboard(lblPassword);
       lblDomain.Click += (s, ev) => CopyToClipboard(lblDomain);
       lblUsername.Click += (s, ev) => CopyToClipboard(lblUsername);
+
+      //FrmKioDetector  frmKioDetector = new FrmKioDetector();
+      //frmKioDetector.Show();
     }
 
     private async void CopyToClipboard(Label label)
@@ -369,6 +373,21 @@ namespace Auto_Logon
       else
       {
         return;
+      }
+    }
+
+    private void txtPassword_TextChanged(object sender, EventArgs e)
+    {
+      // PW Check Regex: At least 8 characters, one uppercase, one lowercase, one number, one special character
+      //Regex.IsMatch(txtPassword.Text, @"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$");
+      btnSetAutoLogon.Enabled = txtPassword.Text.Length >= 3;
+    }
+
+    private void btnCheckKioskMode_Click(object sender, EventArgs e)
+    {
+      using FrmKioDetector kmd = new FrmKioDetector();
+      {
+        kmd.ShowDialog();
       }
     }
   }

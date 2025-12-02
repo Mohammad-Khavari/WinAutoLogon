@@ -8,7 +8,7 @@ namespace Auto_Logon
 {
   internal static class SetAutoLogon
   {
-    internal static void SetAutoLogonConfig(string uname, string domainName, string pw)
+    internal static void SetAutoLogonConfig(string uname, string domainName, string pw, Action callback)
     {
       WindowsApiHelper WinAPI = new WindowsApiHelper();
       try
@@ -83,6 +83,7 @@ namespace Auto_Logon
         {
          WinAPI.CloseHandle(policyHandle);
           //LsaClose(policyHandle);
+          callback?.Invoke();
         }
 
       }

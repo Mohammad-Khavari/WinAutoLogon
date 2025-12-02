@@ -8,15 +8,11 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>Auto_Logon</RootNamespace>
     <AssemblyName>Auto-Logon</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,7 +49,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,12 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeactivateAutoLogon.cs" />
-    <Compile Include="FrmKioDetector.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmKioDetector.Designer.cs">
-      <DependentUpon>FrmKioDetector.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,9 +75,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetAutoLogon.cs" />
     <Compile Include="WindowsApiHelper.cs" />
-    <EmbeddedResource Include="FrmKioDetector.resx">
-      <DependentUpon>FrmKioDetector.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
